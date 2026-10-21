@@ -79,6 +79,6 @@ public class SqlGenerator
 
         string columnsSql = string.Join(",\n    ", columns);
 
-        return $"CREATE TABLE {modelType.Name} (\n    {columnsSql}\n);";
+        return $"CREATE TABLE IF NOT EXISTS {modelType.Name} (\n    {columnsSql}\n);";
     }
 }
