@@ -28,7 +28,7 @@ public class DatabaseManager
     }
 
 
-    // Verifica se as tabelas realmente forma criadas no banco
+    // Verifica se as tabelas realmente foram criadas no banco
     public void ShowTables()
     {
         using SqliteConnection connection =
