@@ -37,6 +37,37 @@ public class HtmlGenerator
         return type == typeof(float) || type == typeof(double) || type == typeof(decimal);
     }
 
+    private string GenerateEnumField(PropertyInfo property, Type enumType, string name)
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.AppendLine(" <div class=\"campo\">");
+
+        if (Attribute.IsDefined(property, typeof(RadioAttribute)))
+        {
+            sb.AppendLine($"  <span class=\"rotulo\">{name}</span>");
+            foreach (string option in Enum.GetNames(enumType))
+            {
+                string value = WebUtility.HtmlEncode(option);
+                sb.AppendLine($"  <label class=\"opcao\"><input type=\"radio\" name=\"{name}\" value=\"{value}\" required> {value}</label>");
+            }
+        }
+        else
+        {
+            sb.AppendLine($"  <label for=\"{name}\">{name}</label>");
+            sb.AppendLine($"  <select id=\"{name}\" name=\"{name}\" required>");
+            sb.AppendLine("   <option value=\"\">Selecione...</option>");
+            foreach (string option in Enum.GetNames(enumType))
+            {
+                string value = WebUtility.HtmlEncode(option);
+                sb.AppendLine($"   <option value=\"{value}\">{value}</option>");
+            }
+            sb.AppendLine("  </select>");
+        }
+
+        sb.AppendLine(" </div>");
+        return sb.ToString();
+    }
+
     public string GenerateForm(Type modelType)
     {
         ModelReader reader = new ModelReader();
@@ -50,6 +81,15 @@ public class HtmlGenerator
                 continue;
 
             string name = WebUtility.HtmlEncode(property.Name);
+
+            // enum nao e input simples: vira select ou radio
+            Type realType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+            if (realType.IsEnum)
+            {
+                fields.Append(GenerateEnumField(property, realType, name));
+                continue;
+            }
+
             string inputType = MapInputType(property.PropertyType);
             string extra = IsDecimal(property.PropertyType) ? " step=\"any\"" : "";
             bool nullable = Nullable.GetUnderlyingType(property.PropertyType) != null;
@@ -82,7 +122,9 @@ public class HtmlGenerator
     .campo {{ margin-bottom: 14px; }}
     label {{ display: block; margin-bottom: 4px; font-weight: bold; }}
     input[type=text], input[type=number], input[type=date], input[type=time],
-    input[type=datetime-local] {{ width: 100%; padding: 8px; box-sizing: border-box; }}
+    input[type=datetime-local], select {{ width: 100%; padding: 8px; box-sizing: border-box; }}
+    .rotulo {{ display: block; margin-bottom: 4px; font-weight: bold; }}
+    label.opcao {{ display: inline-block; font-weight: normal; margin-right: 12px; }}
     button {{ padding: 10px 20px; cursor: pointer; }}
   </style>
 </head>
