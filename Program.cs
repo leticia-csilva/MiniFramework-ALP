@@ -1,13 +1,8 @@
-﻿using System.Reflection;
-using MiniFramework.Core;
+﻿using MiniFramework.Generators;
 using MiniFramework.Models;
 
-ModelReader reader = new ModelReader();
+SqlGenerator generator = new SqlGenerator();
 
-PropertyInfo[] properties = reader.ReadModel(typeof(Aluno));
-
-foreach (PropertyInfo property in properties)
-{
-    Console.WriteLine($"Propriedade: {property.Name}");
-    Console.WriteLine($"Tipo: {property.PropertyType.Name}\n");
-}
+Console.WriteLine(generator.GenerateCreateTable(typeof(Curso)));
+Console.WriteLine();
+Console.WriteLine(generator.GenerateCreateTable(typeof(Aluno)));
