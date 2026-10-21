@@ -11,6 +11,9 @@ public class SqlGenerator
     {
         Type type = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
 
+        // enum guarda o nome da opcao (mesmo valor que o formulario envia)
+        if (type.IsEnum)
+            return "TEXT";
 
         if (type == typeof(int) || type == typeof(long) || type == typeof(short) ||
             type == typeof(byte) || type == typeof(bool))
