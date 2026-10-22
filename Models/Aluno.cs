@@ -11,6 +11,12 @@ public class Aluno
     public int Idade {get; set;}
     public string Email {get; set;} = string.Empty;
 
+    [RadioOptions("Matutino", "Vespertino", "Noturno")]
+    public string Periodo {get; set;} = string.Empty;
+
+    [SelectOptions("Ativo", "Trancado")]
+    public string Situacao {get; set;} = string.Empty;
+
     [ForeignKey(typeof(Curso))]
     public int CursoId {get; set;}
 
