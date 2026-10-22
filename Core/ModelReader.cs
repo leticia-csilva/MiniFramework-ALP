@@ -10,7 +10,7 @@ public class ModelReader
     {
         PropertyInfo[] properties = modelType.GetProperties();
         // PropertyInfo é um tipo definido da linguagem para consultar informações
-        // de uma classe. O método GetProperties pega as ppdds públicas da classe.
+        // de uma classe. O método GetProperties pega as propriedades públicas da classe.
 
         return properties;// Retorna um array de objetos PropertyInfo.
     }
